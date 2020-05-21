@@ -11,19 +11,37 @@ router.get('/todos', async(req, res) => {
 })
 
 router.post('/todos', async(req, res) => {
-    console.log(req.body)
     const { title, category } = req.body
     if (!title || !category ) {
         return res.status(422).send({error: 'You must provide a title and a category'})
     }
     try {
-        const todo = new Todo({ title, category})
+        const todo = new Todo({ title, category, isDone: false })
         await todo.save()
+        res.status(200)
         res.send(todo)
-    } catch {
-        res.status(422).send({ error: err.message })
+    } catch (err) {
+        res.status(400).send({ error: err.message })
     }
 })
 
+router.put('/complete-todo/:_id', async(req, res) => {
+    const id = req.params._id
+    if (!id) {
+        return res.status(404).send({error: 'Could not found id'})
+    }
+    
+    Todo.findById(id, async(err, todo) => {
+        if (err) {
+            return res.status(404).send({error: 'Could not found id'})
+        }
+        res.status(200)
+        todo.isDone = true
+        await todo.save()
+        res.send(todo)
+    })
+        
+   
+})
 
 module.exports = router
