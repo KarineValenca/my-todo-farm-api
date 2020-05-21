@@ -13,7 +13,7 @@ router.get('/todos', async(req, res) => {
 router.post('/todos', async(req, res) => {
     const { title, category } = req.body
     if (!title || !category ) {
-        return res.status(422).send({error: 'You must provide a title and a category'})
+        return res.status(400).send({error: 'You must provide a title and a category'})
     }
     try {
         const todo = new Todo({ title, category, isDone: false })
@@ -29,12 +29,12 @@ router.put('/todos/:_id', async(req, res) => {
     const id = req.params._id
     const { title, category } = req.body
     if (!title || !category ) {
-        return res.status(422).send({error: 'You must provide a title and a category'})
+        return res.status(400).send({error: 'You must provide a title and a category'})
     }
     try {
         Todo.findById(id, async(err, todo) => {
             if (err) {
-                return res.status(404).send({error: 'Could not found id'})
+                return res.status(400).send({error: 'Could not found id'})
             }
             todo.title = title
             todo.category = category
@@ -47,18 +47,35 @@ router.put('/todos/:_id', async(req, res) => {
     }
 })
 
-router.put('/complete-todo/:_id', async(req, res) => {
+router.delete('/todos/:_id', (req, res) => {
     const id = req.params._id
     if (!id) {
-        return res.status(404).send({error: 'Could not found id'})
+        return res.status(400).send({error: 'Could not found id'})
+    }
+
+   
+    Todo.findByIdAndRemove(id, (err) => {
+        if (err) {
+            return res.status(400).send({error: 'Could not found id'})
+        }
+        res.status(200)
+        res.send("To-Do deleted")
+    })
+    
+})
+
+router.put('/change-todo-status/:_id', async(req, res) => {
+    const id = req.params._id
+    if (!id) {
+        return res.status(400).send({error: 'Could not found id'})
     }
     
     try {
         Todo.findById(id, async(err, todo) => {
             if (err) {
-                return res.status(404).send({error: 'Could not found id'})
+                return res.status(400).send({error: 'Could not found id'})
             }
-            todo.isDone = true
+            todo.isDone = !todo.isDone
             await todo.save()
             res.status(200)
             res.send(todo)
