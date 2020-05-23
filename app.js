@@ -1,7 +1,9 @@
 require('./models/Todo')
+require('./models/User')
 const express = require('express')
 const app = express()
 const todoRoutes = require('./routes/todo')
+const userRoutes = require('./routes/user')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 
@@ -9,6 +11,7 @@ const mongoose = require('mongoose')
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(todoRoutes)
+app.use(userRoutes)
 mongoose.connect('mongodb://localhost/mytodofarm', {useNewUrlParser: true})
 
 mongoose.connection.on('connected', () => {

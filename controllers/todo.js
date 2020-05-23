@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 
 const Todo = mongoose.model('Todo')
+const User = mongoose.model('User')
 
 const index = async(req, res) => {
     const todos = await Todo.find({})
@@ -10,26 +11,36 @@ const index = async(req, res) => {
 }
 
 const create = async(req, res) => {
-    console.log("method called")
-    const { title, category } = req.body
-    console.log(req.body)
-    console.log(category)
-    if (!title || !category ) {
-        return res.status(400).send({error: 'You must provide a title and a category'})
-    }
-    try {
-        const todo = new Todo({ title, category, isDone: false })
-        await todo.save()
-        res.status(200)
-        res.send(todo)
-    } catch (err) {
-        res.status(400).send({ error: err.message })
-    }
+    const { title, category, user_id } = req.body
+    
+    User.findById(user_id, async(err, user) => {
+        if (err) {
+            return res.status(400).send({error: 'Could not find user'})
+        }
+        if (!title || !category ) {
+            return res.status(400).send({error: 'You must provide a title and a category'})
+        }
+
+        try {
+            const todo = new Todo({ title, category, isDone: false })
+            await todo.save()
+            
+            user.todos.push(todo)
+            user.save()
+            res.status(200)
+            res.send(todo)
+        } catch (err) {
+            res.status(400).send({ error: err.message })
+        }
+    })
+    
 }
 
 const update = async(req, res) => {
     const id = req.params._id
     const { title, category } = req.body
+    
+    
     if (!title || !category ) {
         return res.status(400).send({error: 'You must provide a title and a category'})
     }
