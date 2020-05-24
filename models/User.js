@@ -9,7 +9,11 @@ const userSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Comment"
         }
-    ]
+    ],
+    seeds: [{
+        name: String,
+        quantity: Number
+    }]
 })
 
 module.exports = mongoose.model("User", userSchema)

@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 
 const Todo = mongoose.model('Todo')
 const User = mongoose.model('User')
+const seedsController = require('../controllers/seed')
 
 const index = async(req, res) => {
     const todos = await Todo.find({})
@@ -88,6 +89,7 @@ const updateStatus = (req, res) => {
                 return res.status(400).send({error: 'Could not found id'})
             }
             todo.isDone = !todo.isDone
+            seedsController.generateRandomSeed()
             await todo.save()
             res.status(200)
             res.send(todo)
