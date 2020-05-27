@@ -4,6 +4,16 @@ const mongoose = require('mongoose')
 const Seed = mongoose.model('Seed')
 const User = mongoose.model('User')
 
+const index = async(req, res) => {
+    const { user_id } = req.params
+    User.findById(user_id, (err, user) => {
+        if (err) {
+            return res.status(404).send({error: 'User not fount'})
+        }
+        res.send(user.seeds)
+    })
+}
+
 const giveSeed = async (user_id) => {
     // todo maybe use a find method inside user controller
     User.findById(user_id, (err, user) => {
@@ -43,5 +53,5 @@ const giveSeed = async (user_id) => {
     })
 }
 module.exports = {
-    giveSeed
+    giveSeed, index
 }
