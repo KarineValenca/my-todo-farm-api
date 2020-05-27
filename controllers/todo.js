@@ -13,21 +13,24 @@ const index = async(req, res) => {
 
 const create = async(req, res) => {
     const { title, category, user_id } = req.body
-    
+
     User.findById(user_id, async(err, user) => {
+        if (!title || !category || !user_id) {
+            return res.status(400).send({error: 'You must provide a title, a category and an user'})
+        }
+
         if (err) {
             return res.status(400).send({error: 'Could not find user'})
-        }
-        if (!title || !category ) {
-            return res.status(400).send({error: 'You must provide a title and a category'})
         }
 
         try {
             const todo = new Todo({ title, category, isDone: false })
+            todo.user._id = user._id
             await todo.save()
             
             user.todos.push(todo)
             user.save()
+
             res.status(200)
             res.send(todo)
         } catch (err) {
@@ -89,8 +92,9 @@ const updateStatus = (req, res) => {
                 return res.status(400).send({error: 'Could not found id'})
             }
             todo.isDone = !todo.isDone
-            seedsController.generateRandomSeed()
+            seedsController.giveSeed(todo.user._id)
             await todo.save()
+            
             res.status(200)
             res.send(todo)
         })

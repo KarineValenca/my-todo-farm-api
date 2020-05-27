@@ -1,5 +1,6 @@
 require('./models/Todo')
 require('./models/User')
+require('./models/Seed')
 const express = require('express')
 const app = express()
 const todoRoutes = require('./routes/todo')
