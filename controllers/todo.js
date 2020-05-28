@@ -12,7 +12,9 @@ const index = async(req, res) => {
 }
 
 const create = async(req, res) => {
-    const { title, category, user_id } = req.body
+    const { title, category } = req.body
+    const { user_id } = req.params
+    console.log(user_id)
 
     User.findById(user_id, async(err, user) => {
         if (!title || !category || !user_id) {

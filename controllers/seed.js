@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const Seed = mongoose.model('Seed')
 const User = mongoose.model('User')
 
-const index = async(req, res) => {
+const show = async(req, res) => {
     const { user_id } = req.params
     User.findById(user_id, (err, user) => {
         if (err) {
@@ -53,5 +53,5 @@ const giveSeed = async (user_id) => {
     })
 }
 module.exports = {
-    giveSeed, index
+    giveSeed, show
 }

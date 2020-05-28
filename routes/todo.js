@@ -5,7 +5,7 @@ const todoController = require('../controllers/todo')
 
 router.get('/todos', todoController.index)
 
-router.post('/todos', todoController.create)
+router.post('/todos/:user_id', todoController.create)
 
 router.put('/todos/:_id', todoController.update)
 

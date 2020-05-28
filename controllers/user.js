@@ -1,5 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
+var passport = require("passport")
 
 const User = mongoose.model('User')
 
@@ -16,12 +17,22 @@ const create = async (req, res) => {
     }
 
     try{
-        const user = new User({username, password, email})
-        await user.save()
-        res.status(200)
-        res.send(user)
+        const user = new User()
+        user.username = username
+        user.email = email
+
+        User.register(user, password, (err, user) => {
+            if(err) {
+                return res.status(400).send({error: err})
+            }
+            passport.authenticate("local")(req, res, () => {
+                res.status(200)
+                res.send(user)
+            })
+        })
+        
     }catch(err) {
-        return req.status(400).send({ error: err })
+        return res.status(400).send({ error: err })
     }
 }
 
