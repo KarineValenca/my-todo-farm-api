@@ -7,6 +7,7 @@ const app = express()
 const todoRoutes = require('./routes/todo')
 const userRoutes = require('./routes/user')
 const seedRoutes = require('./routes/seed')
+const plantRoutes = require('./routes/plant')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 
@@ -16,6 +17,7 @@ app.use(bodyParser.json())
 app.use(todoRoutes)
 app.use(userRoutes)
 app.use(seedRoutes)
+app.use(plantRoutes)
 mongoose.connect('mongodb://localhost/mytodofarm', {useNewUrlParser: true})
 
 mongoose.connection.on('connected', () => {

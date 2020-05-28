@@ -8,7 +8,7 @@ const index = async(req, res) => {
     const { user_id } = req.params
     User.findById(user_id, (err, user) => {
         if (err) {
-            return res.status(404).send({error: 'User not fount'})
+            return res.status(404).send({error: 'User not found'})
         }
         res.send(user.seeds)
     })

@@ -7,12 +7,16 @@ const userSchema = new mongoose.Schema({
     todos: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Comment"
+            ref: "Todo"
         }
     ],
     seeds: [{
         name: String,
         quantity: Number
+    }],
+    plants: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Plant"
     }]
 })
 
