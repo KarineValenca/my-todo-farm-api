@@ -55,6 +55,25 @@ const create = async(req, res) => {
     })
 }
 
+const irrigate = async(req, res) => {
+    const { plant_id } = req.body
+
+    if (!plant_id) {
+        return res.status(400).send({error: "You must provide a plant"})
+    }
+    
+    Plant.findById(plant_id, async (err, plant) => {
+        if (err) {
+            return res.status(404).send({error: "Plant not found"})
+        }
+        console.log(plant)
+        plant.status = "Healthy"
+        plant.save()
+        res.status(200)
+        res.send(plant)
+    })
+}
+
 module.exports = {
-    index, create, show
+    index, create, show, irrigate
 }
