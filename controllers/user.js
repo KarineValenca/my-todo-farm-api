@@ -10,24 +10,30 @@ const index = async(req, res) => {
     res.send(users)
 }
 
-const create = async (req, res) => {
+const create = async(req, res) => {
     const { username, password, email } = req.body
     if (!username || !password || !email ) {
         return res.status(400).send({error: 'You must provide a username, a password and an email'})
     }
-
+    
     try{
-        const user = new User()
-        user.username = username
-        user.email = email
-
-        User.register(user, password, (err, user) => {
-            if(err) {
-                return res.status(400).send({error: err})
+        User.findOne({ email }, (err, userEmail) => {
+            if (userEmail) {
+                return res.status(401).send({error: 'Invalid e-mail or password'})
             }
-            passport.authenticate("local")(req, res, () => {
-                res.status(200)
-                res.send(user)
+        
+            const user = new User()
+            user.username = username
+            user.email = email
+
+            User.register(user, password, (err, user) => {
+                if(err) {
+                    return res.status(400).send({error: err})
+                }
+                passport.authenticate("local")(req, res, () => {
+                    res.status(200)
+                    res.send(user)
+                })
             })
         })
         
