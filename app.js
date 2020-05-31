@@ -5,34 +5,19 @@ require('./models/Plant')
 const express = require('express')
 const app = express()
 const mongoose = require('mongoose')
-const passport = require('passport')
-const LocalStrategy = require('passport-local')
 const todoRoutes = require('./routes/todo')
 const userRoutes = require('./routes/user')
 const seedRoutes = require('./routes/seed')
 const plantRoutes = require('./routes/plant')
+const authRoutes = require('./routes/auth')
 const bodyParser = require('body-parser')
-
-
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-// passport configs
-app.use(require("express-session")({
-    secret: "Top secret", // todo: change to env variable
-    resave: false,
-    saveUninitialized: false
-}))
-
-app.use(passport.initialize())
-app.use(passport.session())
-passport.use(new LocalStrategy(User.authenticate()))
-passport.serializeUser(User.serializeUser())
-passport.deserializeUser(User.deserializeUser())
-
 app.use(todoRoutes)
 app.use(userRoutes)
+app.use(authRoutes)
 app.use(seedRoutes)
 app.use(plantRoutes)
 mongoose.connect('mongodb://localhost/mytodofarm', {useNewUrlParser: true})
