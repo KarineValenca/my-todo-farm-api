@@ -5,7 +5,15 @@ const Todo = mongoose.model('Todo')
 const User = mongoose.model('User')
 const seedsController = require('../controllers/seed')
 
-const index = async(req, res) => {
+const show = async(req, res) => {
+    const { user_id } = req.params
+    User.findById(user_id, async(err, user) => { 
+        if (err) {
+            return res.status(400).send({error: 'Could not find user'})
+        }
+        console.log(user.todos)
+    })
+
     const todos = await Todo.find({})
     res.status(200)
     res.send(todos)
@@ -18,7 +26,7 @@ const create = async(req, res) => {
 
     User.findById(user_id, async(err, user) => {
         if (!title || !category || !user_id) {
-            return res.status(400).send({error: 'You must provide a title, a category and an user'})
+            return res.status(422).send({error: 'You must provide a title, a category and an user'})
         }
 
         if (err) {
@@ -48,7 +56,7 @@ const update = async(req, res) => {
     
     
     if (!title || !category ) {
-        return res.status(400).send({error: 'You must provide a title and a category'})
+        return res.status(422).send({error: 'You must provide a title and a category'})
     }
     try {
         Todo.findById(id, async(err, todo) => {
@@ -70,7 +78,7 @@ const update = async(req, res) => {
 const remove = async(req, res) => {
     const id = req.params._id
     if (!id) {
-        return res.status(400).send({error: 'Could not found id'})
+        return res.status(422).send({error: 'Could not found id'})
     }
    
     Todo.findByIdAndRemove(id, (err) => {
@@ -85,7 +93,7 @@ const remove = async(req, res) => {
 const updateStatus = (req, res) => {
     const id = req.params._id
     if (!id) {
-        return res.status(400).send({error: 'Could not found id'})
+        return res.status(422).send({error: 'Could not found id'})
     }
     
     try {
@@ -106,5 +114,5 @@ const updateStatus = (req, res) => {
 }
 
 module.exports = {
-    index, create, update, remove, updateStatus
+    show, create, update, remove, updateStatus
 }
