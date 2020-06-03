@@ -36,13 +36,20 @@ const create = async(req, res) => {
         try {
             const todo = new Todo({ title, category, isDone: false })
             todo.user._id = user._id
+            console.log(user.todos)
             await todo.save()
-            
-            user.todos.push(todo)
-            user.save()
+            try {
+                await User.update(
+                    {'_id': user._id}, 
+                    {'$push': { todos: todo}
+                })
+                res.status(200)
+                res.send(todo)
+            }catch(err) {
+                console.log(err)
+            }
 
-            res.status(200)
-            res.send(todo)
+            
         } catch (err) {
             res.status(400).send({ error: err.message })
         }
