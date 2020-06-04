@@ -7,16 +7,18 @@ const seedsController = require('../controllers/seed')
 
 const show = async(req, res) => {
     const { user_id } = req.params
-    User.findById(user_id, async(err, user) => { 
-        if (err) {
-            return res.status(400).send({error: 'Could not find user'})
-        }
-        console.log(user.todos)
-    })
+    if (!user_id) {
+        return res.status(422).send({ error: 'Cound not find user' })
+    }
+    const user = await User.findById(user_id).populate("todos")
+    
+    if (!user) {
+        return res.status(433).send({ error: 'Cound not find user' })
+    }
 
-    const todos = await Todo.find({})
     res.status(200)
-    res.send(todos)
+    res.send(user.todos)
+    
 }
 
 const create = async(req, res) => {
@@ -36,13 +38,12 @@ const create = async(req, res) => {
         try {
             const todo = new Todo({ title, category, isDone: false })
             todo.user._id = user._id
-            console.log(user.todos)
             await todo.save()
             try {
                 await User.update(
-                    {'_id': user._id}, 
-                    {'$push': { todos: todo}
-                })
+                    { '_id': user._id }, 
+                    { '$push': { todos: todo } }
+                )
                 res.status(200)
                 res.send(todo)
             }catch(err) {
