@@ -24,12 +24,12 @@ const show = async(req, res) => {
 const create = async(req, res) => {
     const { title, category } = req.body
     const { user_id } = req.params
-    console.log(user_id)
+    if (!title || !category || !user_id) {
+        return res.status(422).send({error: 'You must provide a title, a category and an user'})
+    }
 
     User.findById(user_id, async(err, user) => {
-        if (!title || !category || !user_id) {
-            return res.status(422).send({error: 'You must provide a title, a category and an user'})
-        }
+        
 
         if (err) {
             return res.status(400).send({error: 'Could not find user'})
@@ -45,7 +45,7 @@ const create = async(req, res) => {
                     { '$push': { todos: todo } }
                 )
                 res.status(200)
-                res.send(todo)
+                res.send(user.todos)
             }catch(err) {
                 console.log(err)
             }
