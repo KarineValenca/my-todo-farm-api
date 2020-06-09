@@ -10,7 +10,10 @@ const show = async(req, res) => {
     if (!user_id) {
         return res.status(422).send({ error: 'Cound not find user' })
     }
-    const user = await User.findById(user_id).populate("todos")
+    const user = await User.findById(user_id).populate({
+        path: "todos",
+        options: { sort: { isDone: 1 }}
+    })
     
     if (!user) {
         return res.status(433).send({ error: 'Cound not find user' })
