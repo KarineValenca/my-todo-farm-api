@@ -24,8 +24,12 @@ const show = async(req, res) => {
 const create = async(req, res) => {
     const { title, category } = req.body
     const { user_id } = req.params
-    if (!title || !category || !user_id) {
-        return res.status(422).send({error: 'You must provide a title, a category and an user'})
+    if (!user_id) {
+        return res.status(422).send({error: 'Invalid user'})
+    }
+    
+    if (!title || !category) {
+        return res.status(422).send({error: 'You must provide a title and a category'})
     }
 
     User.findById(user_id, async(err, user) => {
@@ -45,7 +49,7 @@ const create = async(req, res) => {
                     { '$push': { todos: todo } }
                 )
                 res.status(200)
-                res.send(user.todos)
+                res.send(todo)
             }catch(err) {
                 console.log(err)
             }
