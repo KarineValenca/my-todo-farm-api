@@ -22,19 +22,26 @@ const giveSeed = async (user_id) => {
            return 
         }
         try {
-            Seed.find({}, (err, seeds) => {
+            Seed.find({}, async (err, seeds) => {
                 if (err) {
                     return res.status(400).send({error: 'Could not found seed'})
                 }
                 const randomSeed = seeds[Math.floor(Math.random() * seeds.length)]
                 found = user.seeds.find(seed => seed.name === randomSeed.name)
+                console.log(found)
                 if (found == undefined) {
+                    console.log("entrou no undefined")
+                    console.log(user)
                     const userSeed = {}
                     userSeed.name = randomSeed.name
                     userSeed.quantity = 1
 
-                    user.seeds.push(userSeed)
-                    user.save()
+                    //user.seeds.push(userSeed)
+                    //await user.save()
+                    await User.update(
+                        { '_id': user._id }, 
+                        { '$push': { seeds: userSeed } }
+                    )
                 } else {
                     User.findOneAndUpdate(
                         { _id: user._id, "seeds.name": found.name }, 
