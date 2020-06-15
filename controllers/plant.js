@@ -34,22 +34,37 @@ const create = async(req, res) => {
         }
 
         //verify if seeds being planted is from user
-        found = user.seeds.find(seed => seed._id == seed_id)
-        if (found === undefined) {
+        foundSeed = user.seeds.find(seed => seed._id == seed_id)
+        if (foundSeed === undefined) {
             return res.status(404).send({error: "Seed not found"})
         }
 
-        if (found.quantity <= 0) {
+        if (foundSeed.quantity <= 0) {
             return res.status(400).send({error: "You don't have enough seeds to plant"})
         }
 
         const plant = new Plant({age: Date.now(), status: "Healthy" })
         plant.seed._id = seed_id
         await plant.save()
-
-        found.quantity -= 1
-        user.plants.push(plant)
-        user.save()
+        console.log(foundSeed.quantity)
+        //foundSeed.quantity -= 1
+        //user.plants.push(plant)
+        //user.save()
+        try{
+            await User.update(
+                { '_id': user._id }, 
+                { '$push': { plants: plant } },
+                
+            )
+            await User.findOneAndUpdate(
+                { _id: user._id, "seeds.name": foundSeed.name }, 
+                { "$set": {
+                    "seeds.$.quantity": foundSeed.quantity - 1 }
+                }
+            )
+        }catch(err){
+            console.log(err)
+        }
         res.status(200)
         res.send(plant)
     })
