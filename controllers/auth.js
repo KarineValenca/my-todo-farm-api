@@ -7,13 +7,16 @@ const secret = 'TODOCHANGEKEY'
 
 const signup = async(req, res) => {
     const { email, password, username } = req.body
+    console.log(email)
+    console.log(password)
+    console.log(username)
     
     try {
         const user = new User({ email, password, username })
         await user.save()
-        const token = jwt.sign({ userId: user._id}, secret)
+        const token = jwt.sign({ userId: user._id }, secret)
         res.status(200)
-        res.send({ token })
+        res.send({ token, user })
     }catch(err){
         return res.status(422).send(err.message)
     }
