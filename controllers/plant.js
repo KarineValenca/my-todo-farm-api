@@ -12,12 +12,12 @@ const index = async(req, res) => {
 
 const show = async(req, res) => {
     const { user_id } = req.params
-    User.findById(user_id, (err, user) => {
-        if (err) {
-            return res.status(404).send({error: 'User not found'})
-        }
-        res.send(user.plants)
+    const user = await User.findById(user_id).populate({
+        path: "plants",
     })
+   
+    res.status(200)
+    res.send(user.plants)  
 }
 
 const create = async(req, res) => {
@@ -44,12 +44,9 @@ const create = async(req, res) => {
         }
 
         const plant = new Plant({age: Date.now(), status: "Healthy" })
-        plant.seed._id = seed_id
+        plant.seedName = foundSeed.name
+
         await plant.save()
-        console.log(foundSeed.quantity)
-        //foundSeed.quantity -= 1
-        //user.plants.push(plant)
-        //user.save()
         try{
             await User.update(
                 { '_id': user._id }, 
