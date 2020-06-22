@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const todoSchema = new mongoose.Schema({
     title: String,
-    category: String, // todo: category must be a type
+    category: { type: String, enum : [ 'study', 'fit', 'work', 'hobbies'] }, // todo: category must be a type
     isDone: Boolean,
     user: {
         _id: {
@@ -12,4 +12,5 @@ const todoSchema = new mongoose.Schema({
     }
 })
 
+todoSchema.path('category').options.enum
 mongoose.model('Todo', todoSchema)
