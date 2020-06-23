@@ -78,7 +78,6 @@ const irrigate = async(req, res) => {
         if (err) {
             return res.status(404).send({error: "Plant not found"})
         }
-        console.log(plant)
         plant.status = "Healthy"
         plant.save()
         res.status(200)
@@ -86,6 +85,26 @@ const irrigate = async(req, res) => {
     })
 }
 
+const setPlantThirst = async() => {
+    Plant.find({ status: 'Healthy' }, async(err, plants) => {
+        if(err) {
+            console.log(err)
+        }
+        console.log("setting healthy plants to dry (MUAHAHAHAHA)")
+        plants.forEach( (plant) => {
+            Plant.findById(plant._id, async(err, plant) => {
+                if (err){
+                    console.log("failed setting plants to thirst", err)
+                    return
+                }
+                plant.status = "Thirsty"
+                plant.save()
+            })
+        })
+        console.log("all right! plants are thristy!")
+    })
+}
+
 module.exports = {
-    index, create, show, irrigate
+    index, create, show, irrigate, setPlantThirst
 }
