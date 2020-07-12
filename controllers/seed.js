@@ -26,18 +26,13 @@ const giveSeed = async (user_id) => {
                 if (err) {
                     return res.status(400).send({error: 'Could not found seed'})
                 }
-                const randomSeed = seeds[Math.floor(Math.random() * seeds.length)]
+                const randomSeed = randomizeSeed(seeds)
                 found = user.seeds.find(seed => seed.name === randomSeed.name)
-                console.log(found)
                 if (found == undefined) {
-                    console.log("entrou no undefined")
-                    console.log(user)
                     const userSeed = {}
                     userSeed.name = randomSeed.name
                     userSeed.quantity = 1
 
-                    //user.seeds.push(userSeed)
-                    //await user.save()
                     await User.update(
                         { '_id': user._id }, 
                         { '$push': { seeds: userSeed } }
@@ -59,6 +54,16 @@ const giveSeed = async (user_id) => {
         
     })
 }
+
+// the sum of the weights must be equal to 1
+const randomizeSeed = (seeds) => {
+    let i = 0, sum = 0, r = Math.random()
+    for (i in seeds) {
+        sum += seeds[i].rarity
+        if (r <= sum) return seeds[i]
+    }
+}
+
 module.exports = {
     giveSeed, show
 }

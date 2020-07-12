@@ -22,13 +22,16 @@ var data = [
         'model': 'Seed',
         'documents': [
             {
-                'name': 'Wheat'
+                'name': 'Wheat',
+                'rarity': 0.7
             },
             {
-                'name': 'Rice'
+                'name': 'Rice',
+                'rarity': 0.2
             },
             {
-                'name': 'Rose'
+                'name': 'Rose',
+                'rarity': 0.1
             }
         ]
     }

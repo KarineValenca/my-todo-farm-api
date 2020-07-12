@@ -7,10 +7,7 @@ const secret = 'TODOCHANGEKEY'
 
 const signup = async(req, res) => {
     const { email, password, username } = req.body
-    console.log(email)
-    console.log(password)
-    console.log(username)
-    
+
     try {
         const user = new User({ email, password, username })
         await user.save()
