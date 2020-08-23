@@ -12,6 +12,12 @@ const plantRoutes = require('./routes/plant')
 const authRoutes = require('./routes/auth')
 const bodyParser = require('body-parser')
 
+const USERDB = process.env.USERDB
+const PASSDB = process.env.PASSDB
+
+// MongoAtlas Connection
+const uri = `mongodb+srv://${USERDB}:${PASSDB}@cluster0.azzir.mongodb.net/my-todo-farm?retryWrites=true&w=majority`
+
 const setPlantDry = require('./jobs/setPlantsDry')
 
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -22,7 +28,7 @@ app.use(userRoutes)
 app.use(authRoutes)
 app.use(seedRoutes)
 app.use(plantRoutes)
-mongoose.connect('mongodb://localhost/mytodofarm', {useNewUrlParser: true})
+mongoose.connect(uri, {useNewUrlParser: true})
 
 mongoose.connection.on('connected', () => {
     console.log('Connected to mongo instance')
