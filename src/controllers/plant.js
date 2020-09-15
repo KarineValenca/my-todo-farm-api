@@ -76,7 +76,7 @@ const irrigate = async(req, res) => {
     
     Plant.findById(plant_id, async (err, plant) => {
         if (err) {
-            return res.status(404).send({error: "Plant not found"})
+            return res.status(400).send({error: "Plant not found"})
         }
         plant.status = "Healthy"
         plant.save()
@@ -102,6 +102,21 @@ const setPlantThirst = async() => {
             })
         })
         console.log("all right! plants are thristy!")
+    })
+}
+
+const haverstPlant = async () => {
+    const { plant_id } = req.body
+
+    if (!plant_id) {
+        return res.status(400).send({error: "You must provide a plant"})
+    }
+
+    Plant.findById(plant_id, async(err, plant) => {
+        if (err) {
+            return res.status(400).send({error: "Plant not found"})
+        }
+        console.log("Found plant")
     })
 }
 

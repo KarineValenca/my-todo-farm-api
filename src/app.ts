@@ -16,9 +16,9 @@ const USERDB = process.env.USERDB
 const PASSDB = process.env.PASSDB
 
 // MongoAtlas Connection
-const uri = `mongodb+srv://${USERDB}:${PASSDB}@cluster0.azzir.mongodb.net/my-todo-farm?retryWrites=true&w=majority`
+// const uri = `mongodb+srv://${USERDB}:${PASSDB}@cluster0.azzir.mongodb.net/my-todo-farm?retryWrites=true&w=majority`
 // Local DB connection
-//const uri = 'mongodb://localhost/mytodofarm'
+const uri = 'mongodb://localhost/mytodofarm'
 
 const setPlantDry = require('./jobs/setPlantsDry')
 

@@ -9,7 +9,7 @@ chai.should()
 describe("Auth", () => {
     describe("Signup", () => {
         it("should signup successfully", async () => {
-            chai.request(app)
+            await chai.request(app)
                 .post('/signup')
                 .send({
                     'email': 'tes1t@test.com',

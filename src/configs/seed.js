@@ -1,8 +1,11 @@
 var seeder = require('mongoose-seed')
+const USERDB = process.env.USERDB
+const PASSDB = process.env.PASSDB
 
-
+const uri = `mongodb+srv://${USERDB}:${PASSDB}@cluster0.azzir.mongodb.net/my-todo-farm?retryWrites=true&w=majority`
+//const uri = 'mongodb://localhost/mytodofarm'
 // connect to mongo db via mongoose
-seeder.connect('mongodb://localhost/mytodofarm', () => {
+seeder.connect(uri, () => {
     //load mongoose models
     seeder.loadModels([
         './models/Seed.js'

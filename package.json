@@ -2,11 +2,13 @@
   "name": "my-todo-farm",
   "version": "0.0.1",
   "description": "",
-  "main": "app.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "node app.js",
-    "seed": "node configs/seed.js",
-    "test": "mocha"
+    "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "nodemon .",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -38,6 +40,8 @@
     "mocha": "^8.0.1",
     "nodemon": "^2.0.4",
     "request": "^2.88.2",
-    "sinon": "^9.0.2"
+    "sinon": "^9.0.2",
+    "tslint": "^6.1.3",
+    "typescript": "^4.0.2"
   }
 }
